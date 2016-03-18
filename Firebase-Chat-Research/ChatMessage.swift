@@ -33,6 +33,5 @@ class ChatMessage: NSObject {
         self.timeStamp = timeStamp
         self.read = read
     }
-    
 
 }

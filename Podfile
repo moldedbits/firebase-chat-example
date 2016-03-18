@@ -4,7 +4,10 @@
  use_frameworks!
 
 target 'Firebase-Chat-Research' do
+
 pod 'Firebase', '>= 2.5.0'
+pod 'JSQMessagesViewController'
+
 end
 
 target 'Firebase-Chat-ResearchTests' do

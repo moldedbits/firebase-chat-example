@@ -85,7 +85,11 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Firebase-Chat-Research/Firebase.framework"
+  install_framework "Pods-Firebase-Chat-Research/JSQMessagesViewController.framework"
+  install_framework "Pods-Firebase-Chat-Research/JSQSystemSoundPlayer.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Firebase-Chat-Research/Firebase.framework"
+  install_framework "Pods-Firebase-Chat-Research/JSQMessagesViewController.framework"
+  install_framework "Pods-Firebase-Chat-Research/JSQSystemSoundPlayer.framework"
 fi
