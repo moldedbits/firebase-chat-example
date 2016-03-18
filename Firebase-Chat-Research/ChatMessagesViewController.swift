@@ -11,13 +11,21 @@ import Firebase
 
 class ChatMessagesViewController: UIViewController {
 
+    @IBOutlet weak var sendMessageButton: UIButton!
+    @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var bottomViewConstraint: NSLayoutConstraint!
     var chat: Chat?
     var chatMessages = [ChatMessage]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
+        observerKeyboard()
+        messageTextField.delegate = self
+        let tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
+        self.tableView.addGestureRecognizer(tap)
+        
         let ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
         ref.queryOrderedByChild("timestamp").queryLimitedToFirst(50).observeEventType(.ChildAdded, withBlock: { [weak self]
             snapshot in
@@ -43,6 +51,46 @@ class ChatMessagesViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    @IBAction func sendMesageButtonTapped(sender: UIButton) {
+    }
+    
+    
+    private func observerKeyboard() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    private func removeKeyboardObserver() {
+        NSNotificationCenter.defaultCenter().removeObserver(UIKeyboardWillChangeFrameNotification)
+        NSNotificationCenter.defaultCenter().removeObserver(UIKeyboardWillHideNotification)
+    }
+    
+    func keyboardWillShow(notification: NSNotification) {
+        guard let info: NSDictionary = notification.userInfo else {return}
+        let keyboardFrame = info.objectForKey(UIKeyboardFrameEndUserInfoKey)?.CGRectValue
+        let timeInterval: NSTimeInterval = info.objectForKey(UIKeyboardAnimationDurationUserInfoKey)!.doubleValue
+        let height = keyboardFrame?.height
+        if height != 0 {
+            bottomViewConstraint.constant = height!
+        }
+        UIView.animateWithDuration(timeInterval) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        guard let info: NSDictionary = notification.userInfo else {return}
+        let timeInterval: NSTimeInterval = info.objectForKey(UIKeyboardAnimationDurationUserInfoKey)!.doubleValue
+        bottomViewConstraint.constant = 0
+        UIView.animateWithDuration(timeInterval) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func handleTap(sender: UITapGestureRecognizer) {
+        messageTextField.endEditing(true)
+    }
+    
 }
 
 extension ChatMessagesViewController: UITableViewDataSource, UITableViewDelegate {
@@ -62,10 +110,9 @@ extension ChatMessagesViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath)
         let chatMessage = chatMessages[indexPath.row]
-        cell.textLabel?.text = chatMessage.to
+        cell.textLabel?.text = chatMessage.from
         cell.detailTextLabel?.text = chatMessage.message
         return cell
-        
     }
 }
 
