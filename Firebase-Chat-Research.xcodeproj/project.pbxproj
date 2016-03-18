@@ -8,13 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D31C9BE3B100C96216 /* AppDelegate.swift */; };
-		0933D3D61C9BE3B100C96216 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D51C9BE3B100C96216 /* MasterViewController.swift */; };
-		0933D3D81C9BE3B100C96216 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D71C9BE3B100C96216 /* DetailViewController.swift */; };
+		0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */; };
+		0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D71C9BE3B100C96216 /* ChatMessagesViewController.swift */; };
 		0933D3DB1C9BE3B100C96216 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0933D3D91C9BE3B100C96216 /* Main.storyboard */; };
 		0933D3DD1C9BE3B100C96216 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0933D3DC1C9BE3B100C96216 /* Assets.xcassets */; };
 		0933D3E01C9BE3B100C96216 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0933D3DE1C9BE3B100C96216 /* LaunchScreen.storyboard */; };
 		0933D3EB1C9BE3B100C96216 /* Firebase_Chat_ResearchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3EA1C9BE3B100C96216 /* Firebase_Chat_ResearchTests.swift */; };
 		0933D3F61C9BE3B100C96216 /* Firebase_Chat_ResearchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3F51C9BE3B100C96216 /* Firebase_Chat_ResearchUITests.swift */; };
+		093BA69A1C9BE71D00A5FA10 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093BA6991C9BE71D00A5FA10 /* Constants.swift */; };
+		093BA69C1C9BE9F500A5FA10 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093BA69B1C9BE9F500A5FA10 /* LoginViewController.swift */; };
+		093BA69E1C9BF23000A5FA10 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093BA69D1C9BF23000A5FA10 /* Chat.swift */; };
+		093BA6A01C9C1D2A00A5FA10 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093BA69F1C9C1D2A00A5FA10 /* ChatMessage.swift */; };
 		A3FB6ED34A9703E144062FD8 /* Pods_Firebase_Chat_Research.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B2816150762CB4391CBDDBDE /* Pods_Firebase_Chat_Research.framework */; };
 /* End PBXBuildFile section */
 
@@ -38,8 +42,8 @@
 /* Begin PBXFileReference section */
 		0933D3D01C9BE3B100C96216 /* Firebase-Chat-Research.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firebase-Chat-Research.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0933D3D31C9BE3B100C96216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0933D3D51C9BE3B100C96216 /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
-		0933D3D71C9BE3B100C96216 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
+		0933D3D71C9BE3B100C96216 /* ChatMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessagesViewController.swift; sourceTree = "<group>"; };
 		0933D3DA1C9BE3B100C96216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0933D3DC1C9BE3B100C96216 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0933D3DF1C9BE3B100C96216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -50,6 +54,10 @@
 		0933D3F11C9BE3B100C96216 /* Firebase-Chat-ResearchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Firebase-Chat-ResearchUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0933D3F51C9BE3B100C96216 /* Firebase_Chat_ResearchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Firebase_Chat_ResearchUITests.swift; sourceTree = "<group>"; };
 		0933D3F71C9BE3B100C96216 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		093BA6991C9BE71D00A5FA10 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		093BA69B1C9BE9F500A5FA10 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		093BA69D1C9BF23000A5FA10 /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		093BA69F1C9C1D2A00A5FA10 /* ChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		174148DF94F45D6BF3B86331 /* Pods-Firebase-Chat-Research.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Firebase-Chat-Research.release.xcconfig"; path = "Pods/Target Support Files/Pods-Firebase-Chat-Research/Pods-Firebase-Chat-Research.release.xcconfig"; sourceTree = "<group>"; };
 		9E68B0DF10B4CDF97AF7C17D /* Pods-Firebase-Chat-Research.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Firebase-Chat-Research.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Firebase-Chat-Research/Pods-Firebase-Chat-Research.debug.xcconfig"; sourceTree = "<group>"; };
 		B2816150762CB4391CBDDBDE /* Pods_Firebase_Chat_Research.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Firebase_Chat_Research.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,12 +115,16 @@
 			isa = PBXGroup;
 			children = (
 				0933D3D31C9BE3B100C96216 /* AppDelegate.swift */,
-				0933D3D51C9BE3B100C96216 /* MasterViewController.swift */,
-				0933D3D71C9BE3B100C96216 /* DetailViewController.swift */,
+				093BA69B1C9BE9F500A5FA10 /* LoginViewController.swift */,
+				0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */,
+				0933D3D71C9BE3B100C96216 /* ChatMessagesViewController.swift */,
 				0933D3D91C9BE3B100C96216 /* Main.storyboard */,
 				0933D3DC1C9BE3B100C96216 /* Assets.xcassets */,
 				0933D3DE1C9BE3B100C96216 /* LaunchScreen.storyboard */,
 				0933D3E11C9BE3B100C96216 /* Info.plist */,
+				093BA6991C9BE71D00A5FA10 /* Constants.swift */,
+				093BA69D1C9BF23000A5FA10 /* Chat.swift */,
+				093BA69F1C9C1D2A00A5FA10 /* ChatMessage.swift */,
 			);
 			path = "Firebase-Chat-Research";
 			sourceTree = "<group>";
@@ -334,9 +346,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0933D3D81C9BE3B100C96216 /* DetailViewController.swift in Sources */,
-				0933D3D61C9BE3B100C96216 /* MasterViewController.swift in Sources */,
+				093BA6A01C9C1D2A00A5FA10 /* ChatMessage.swift in Sources */,
+				0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */,
+				093BA69E1C9BF23000A5FA10 /* Chat.swift in Sources */,
+				0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */,
 				0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */,
+				093BA69C1C9BE9F500A5FA10 /* LoginViewController.swift in Sources */,
+				093BA69A1C9BE71D00A5FA10 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
