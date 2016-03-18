@@ -10,24 +10,25 @@ import UIKit
 import Firebase
 
 class ChatMessagesViewController: UIViewController {
-
+    
     @IBOutlet weak var sendMessageButton: UIButton!
     @IBOutlet weak var messageTextField: UITextField!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var bottomViewConstraint: NSLayoutConstraint!
+    var userName: String?
     var chat: Chat?
     var chatMessages = [ChatMessage]()
-
+    var ref: Firebase?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTableView()
         observerKeyboard()
-        messageTextField.delegate = self
         let tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         self.tableView.addGestureRecognizer(tap)
+        ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
         
-        let ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
-        ref.queryOrderedByChild("timestamp").queryLimitedToFirst(50).observeEventType(.ChildAdded, withBlock: { [weak self]
+        ref?.queryOrderedByChild("timestamp").queryLimitedToFirst(50).observeEventType(.ChildAdded, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
             print(snapshot.value)
@@ -40,18 +41,32 @@ class ChatMessagesViewController: UIViewController {
             let chatMessage = ChatMessage(id: id, from: from, to: to, message: message, timeStamp: timeStamp, read: read)
             weakSelf.chatMessages.append(chatMessage)
             weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
+            weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
             
             }, withCancelBlock: { error in
                 print(error.description)
         })
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     @IBAction func sendMesageButtonTapped(sender: UIButton) {
+        
+        if !(messageTextField.text ?? "").isEmpty {
+            let to = (chat?.to ?? "") == userName ? (chat?.from ?? "") : (chat?.to ?? "")
+            let newMessage = [ChatMessage.FireBasePropertyKey.from : userName ?? "",
+                ChatMessage.FireBasePropertyKey.to : to,
+                ChatMessage.FireBasePropertyKey.read : String(false),
+                ChatMessage.FireBasePropertyKey.message : messageTextField.text!,
+                ChatMessage.FireBasePropertyKey.timeStamp : "\(Int(NSDate().timeIntervalSince1970 * 1000))"]
+            print(newMessage)
+            ref?.childByAutoId().setValue(newMessage)
+            messageTextField.text = ""
+        }
     }
     
     
@@ -75,6 +90,7 @@ class ChatMessagesViewController: UIViewController {
         }
         UIView.animateWithDuration(timeInterval) { () -> Void in
             self.view.layoutIfNeeded()
+            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.chatMessages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
         }
     }
     

@@ -106,6 +106,7 @@ class ChatsViewController: UITableViewController {
                 let chat = chats[indexPath.row]
                 let chatMessageVieeController = segue.destinationViewController as! ChatMessagesViewController
                 chatMessageVieeController.chat = chat
+                chatMessageVieeController.userName = userName
             }
         }
     }
