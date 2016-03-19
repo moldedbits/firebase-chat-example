@@ -19,6 +19,7 @@ class ChatMessagesViewController: UIViewController {
     var chat: Chat?
     var chatMessages = [ChatMessage]()
     var ref: Firebase?
+    var channelRef: Firebase?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +28,9 @@ class ChatMessagesViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         self.tableView.addGestureRecognizer(tap)
         ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
+        channelRef = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")"))
         
-        ref?.queryOrderedByChild("timestamp").queryLimitedToFirst(50).observeEventType(.ChildAdded, withBlock: { [weak self]
+        ref?.queryOrderedByChild("timestamp").queryLimitedToLast(50).observeEventType(.ChildAdded, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
             print(snapshot.value)
@@ -47,6 +49,11 @@ class ChatMessagesViewController: UIViewController {
                 print(error.description)
         })
         
+        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            print(snapshot.value["totalCount"])
+            print(snapshot.value["unreadCount"])
+        })
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -57,6 +64,7 @@ class ChatMessagesViewController: UIViewController {
     @IBAction func sendMesageButtonTapped(sender: UIButton) {
         
         if !(messageTextField.text ?? "").isEmpty {
+            guard let messageRef = ref else {return}
             let to = (chat?.to ?? "") == userName ? (chat?.from ?? "") : (chat?.to ?? "")
             let newMessage = [ChatMessage.FireBasePropertyKey.from : userName ?? "",
                 ChatMessage.FireBasePropertyKey.to : to,
@@ -64,8 +72,37 @@ class ChatMessagesViewController: UIViewController {
                 ChatMessage.FireBasePropertyKey.message : messageTextField.text!,
                 ChatMessage.FireBasePropertyKey.timeStamp : "\(Int(NSDate().timeIntervalSince1970 * 1000))"]
             print(newMessage)
-            ref?.childByAutoId().setValue(newMessage)
+            messageRef.childByAutoId().setValue(newMessage, withCompletionBlock: {
+                (error:NSError?, ref:Firebase!) in
+                if (error != nil) {
+                    print("Data could not be saved.")
+                } else {
+                    self.channelRef?.runTransactionBlock({
+                        (currentData:FMutableData!) in
+                        let unreadCountData = currentData.childDataByAppendingPath("unreadCount")
+                        let totalCountData = currentData.childDataByAppendingPath("totalCount")
+                        
+                        var totalCount = totalCountData.value as? Int
+                        if totalCount == nil {
+                            totalCount = 0
+                        }
+                        totalCountData.value = totalCount! + 1
+                        
+                        var unreadCount = unreadCountData.value as? Int
+                        if unreadCount == nil {
+                            unreadCount = 0
+                        }
+                        unreadCountData.value = unreadCount! + 1
+                        
+                        
+                        return FTransactionResult.successWithValue(currentData)
+                    })
+                    
+                    print("Data saved successfully!")
+                }
+            })
             messageTextField.text = ""
+            
         }
     }
     

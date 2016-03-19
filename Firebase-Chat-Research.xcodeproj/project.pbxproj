@@ -307,7 +307,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"../mask-app-icon.sh\"";
+			shellScript = "\"${SRCROOT}/mask-app-icon.sh\"\n";
 		};
 		C0D7DBD37DF782DA4D12696A /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -507,12 +507,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E68B0DF10B4CDF97AF7C17D /* Pods-Firebase-Chat-Research.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tanmay Middha (JSQ6J6E3VN)";
 				INFOPLIST_FILE = "Firebase-Chat-Research/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moldedbits.Firebase-Chat-Research";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2b98fbf8-b903-4f4f-90f1-fafe93cc40f2";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -520,13 +520,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 174148DF94F45D6BF3B86331 /* Pods-Firebase-Chat-Research.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Tanmay Middha (JSQ6J6E3VN)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tanmay Middha (JSQ6J6E3VN)";
 				INFOPLIST_FILE = "Firebase-Chat-Research/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moldedbits.Firebase-Chat-Research";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "2b98fbf8-b903-4f4f-90f1-fafe93cc40f2";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
