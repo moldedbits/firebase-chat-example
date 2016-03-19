@@ -43,6 +43,7 @@ function abspath() { pushd . > /dev/null; if [ -d "$1" ]; then cd "$1"; dirs -l 
 
 function processIcon() {
 base_file=$1
+echo $base_file
 
 cd "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 base_path=`find . -name ${base_file}`

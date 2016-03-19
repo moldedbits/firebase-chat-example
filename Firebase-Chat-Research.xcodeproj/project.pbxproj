@@ -492,7 +492,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9E68B0DF10B4CDF97AF7C17D /* Pods-Firebase-Chat-Research.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
 				INFOPLIST_FILE = "Firebase-Chat-Research/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -506,7 +505,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 174148DF94F45D6BF3B86331 /* Pods-Firebase-Chat-Research.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
 				INFOPLIST_FILE = "Firebase-Chat-Research/Info.plist";
