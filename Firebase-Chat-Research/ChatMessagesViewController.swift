@@ -44,9 +44,27 @@ class ChatMessagesViewController: UIViewController {
             weakSelf.chatMessages.append(chatMessage)
             weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
             weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+            if from != weakSelf.userName {
+                guard let messageRef = weakSelf.ref else {return}
+                weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
+            }
+            
+            
             
             }, withCancelBlock: { error in
                 print(error.description)
+        })
+        
+        ref?.observeEventType(.ChildRemoved, withBlock: { [weak self]
+            snapshot in
+            guard let weakSelf = self else {return}
+            print(snapshot.value)
+            let id = snapshot.key
+            let index = weakSelf.chatMessages.indexOf {$0.id == id}
+            if index != nil && index! >= 0 && index! < weakSelf.chatMessages.count {
+                weakSelf.chatMessages.removeAtIndex(index!)
+                weakSelf.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: index!, inSection: 0)], withRowAnimation: .Automatic)
+            }
         })
         
         channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
@@ -59,6 +77,59 @@ class ChatMessagesViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func updateReadMsgCount(forRefrence reference: Firebase) {
+        reference.runTransactionBlock({ (messageData) -> FTransactionResult! in
+            let read = messageData.childDataByAppendingPath("read")
+            read.value = true
+            return FTransactionResult.successWithValue(messageData)
+            }) { (error, commited, snapshot) -> Void in
+                if error == nil && commited {
+                    self.channelRef?.runTransactionBlock({
+                        (currentData:FMutableData!) in
+                        let unreadCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_unreadCount")
+                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
+                        
+                        var totalCount = totalCountData.value as? Int
+                        if totalCount == nil {
+                            totalCount = 0
+                        }
+                        totalCountData.value = totalCount! - 1
+                        
+                        var unreadCount = unreadCountData.value as? Int
+                        if unreadCount == nil {
+                            unreadCount = 0
+                        }
+                        unreadCountData.value = unreadCount! - 1
+                        return FTransactionResult.successWithValue(currentData)
+                    })
+                }
+        }
+    }
+    
+    func updateTotalAndUnreadCount() {
+        self.channelRef?.runTransactionBlock({
+            (currentData:FMutableData!) in
+            let unreadCountData = currentData.childDataByAppendingPath("\(self.chat?.user ?? "")_unreadCount")
+            let totalCountData = currentData.childDataByAppendingPath("\(self.chat?.user ?? "")_totalCount")
+            
+            var totalCount = totalCountData.value as? Int
+            if totalCount == nil {
+                totalCount = 0
+            }
+            totalCountData.value = totalCount! + 1
+            
+            var unreadCount = unreadCountData.value as? Int
+            if unreadCount == nil {
+                unreadCount = 0
+            }
+            unreadCountData.value = unreadCount! + 1
+            
+            
+            return FTransactionResult.successWithValue(currentData)
+        })
+        
     }
     
     @IBAction func sendMesageButtonTapped(sender: UIButton) {
@@ -77,27 +148,7 @@ class ChatMessagesViewController: UIViewController {
                 if (error != nil) {
                     print("Data could not be saved.")
                 } else {
-                    self.channelRef?.runTransactionBlock({
-                        (currentData:FMutableData!) in
-                        let unreadCountData = currentData.childDataByAppendingPath("unreadCount")
-                        let totalCountData = currentData.childDataByAppendingPath("totalCount")
-                        
-                        var totalCount = totalCountData.value as? Int
-                        if totalCount == nil {
-                            totalCount = 0
-                        }
-                        totalCountData.value = totalCount! + 1
-                        
-                        var unreadCount = unreadCountData.value as? Int
-                        if unreadCount == nil {
-                            unreadCount = 0
-                        }
-                        unreadCountData.value = unreadCount! + 1
-                        
-                        
-                        return FTransactionResult.successWithValue(currentData)
-                    })
-                    
+                    self.updateTotalAndUnreadCount()
                     print("Data saved successfully!")
                 }
             })
@@ -127,7 +178,9 @@ class ChatMessagesViewController: UIViewController {
         }
         UIView.animateWithDuration(timeInterval) { () -> Void in
             self.view.layoutIfNeeded()
-            self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.chatMessages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+            if self.chatMessages.count > 0 {
+                self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: self.chatMessages.count - 1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+            }
         }
     }
     
