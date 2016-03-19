@@ -38,7 +38,7 @@ platform :ios do
   desc "This will also make sure the profile is up to date"
   lane :beta do
     desc "Masking App icon"
-    sh "mask-app-icon.sh"
+    sh "fastlane/mask-app-icon.sh"
     
     ensure_git_branch
     # match(type: "appstore") # more information: https://codesigning.guide
