@@ -177,6 +177,7 @@
 				0933D3CE1C9BE3B100C96216 /* Resources */,
 				CE5E65C238BA74915D9C2DB0 /* Embed Pods Frameworks */,
 				C0D7DBD37DF782DA4D12696A /* Copy Pods Resources */,
+				093BA6A11C9D59E000A5FA10 /* Mask App Icon */,
 			);
 			buildRules = (
 			);
@@ -294,6 +295,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		093BA6A11C9D59E000A5FA10 /* Mask App Icon */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Mask App Icon";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"../mask-app-icon.sh\"";
+		};
 		C0D7DBD37DF782DA4D12696A /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
