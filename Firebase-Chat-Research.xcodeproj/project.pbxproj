@@ -520,8 +520,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 174148DF94F45D6BF3B86331 /* Pods-Firebase-Chat-Research.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Tanmay Middha (JSQ6J6E3VN)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Tanmay Middha (JSQ6J6E3VN)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Molded Bits Technologies Private Limited (DHG6J45BG4)";
 				INFOPLIST_FILE = "Firebase-Chat-Research/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.moldedbits.Firebase-Chat-Research";
