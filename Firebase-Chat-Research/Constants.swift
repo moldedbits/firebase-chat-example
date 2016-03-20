@@ -11,6 +11,7 @@ import Foundation
 struct Constants {
 
     static let FIREBASE_BASE_URL = "https://unlazechatresearch.firebaseio.com"
+    static let BASE_URL = "https://floating-depths-76594.herokuapp.com"
 }
 
 struct StoryBoardIdentifier {

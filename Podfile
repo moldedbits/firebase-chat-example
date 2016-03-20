@@ -7,6 +7,8 @@ target 'Firebase-Chat-Research' do
 
 pod 'Firebase', '>= 2.5.0'
 pod 'JSQMessagesViewController'
+pod 'Alamofire', '~> 3.0'
+pod 'SwiftyJSON'
 
 end
 

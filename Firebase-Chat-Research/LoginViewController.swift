@@ -13,7 +13,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var userNameTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        apiManager.getUserLists { (successful, result, serverError, error) -> () in
+            if successful {
+                print(result)
+            }
+        }
         // Do any additional setup after loading the view.
     }
 

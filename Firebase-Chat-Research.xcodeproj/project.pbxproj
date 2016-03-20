@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		091F19531C9EF711004F00B8 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19521C9EF711004F00B8 /* APIManager.swift */; };
+		091F19551C9EF728004F00B8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19541C9EF728004F00B8 /* User.swift */; };
+		091F19581C9EFA4D004F00B8 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19571C9EFA4D004F00B8 /* Response.swift */; };
 		0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D31C9BE3B100C96216 /* AppDelegate.swift */; };
 		0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */; };
 		0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D71C9BE3B100C96216 /* ChatMessagesViewController.swift */; };
@@ -40,6 +43,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		091F19521C9EF711004F00B8 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		091F19541C9EF728004F00B8 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		091F19571C9EFA4D004F00B8 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		0933D3D01C9BE3B100C96216 /* Firebase-Chat-Research.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firebase-Chat-Research.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0933D3D31C9BE3B100C96216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
@@ -89,6 +95,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		091F19561C9EFA39004F00B8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				093BA69D1C9BF23000A5FA10 /* Chat.swift */,
+				093BA69F1C9C1D2A00A5FA10 /* ChatMessage.swift */,
+				091F19541C9EF728004F00B8 /* User.swift */,
+				091F19571C9EFA4D004F00B8 /* Response.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		0933D3C71C9BE3B100C96216 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +131,7 @@
 		0933D3D21C9BE3B100C96216 /* Firebase-Chat-Research */ = {
 			isa = PBXGroup;
 			children = (
+				091F19561C9EFA39004F00B8 /* Models */,
 				0933D3D31C9BE3B100C96216 /* AppDelegate.swift */,
 				093BA69B1C9BE9F500A5FA10 /* LoginViewController.swift */,
 				0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */,
@@ -123,8 +141,7 @@
 				0933D3DE1C9BE3B100C96216 /* LaunchScreen.storyboard */,
 				0933D3E11C9BE3B100C96216 /* Info.plist */,
 				093BA6991C9BE71D00A5FA10 /* Constants.swift */,
-				093BA69D1C9BF23000A5FA10 /* Chat.swift */,
-				093BA69F1C9C1D2A00A5FA10 /* ChatMessage.swift */,
+				091F19521C9EF711004F00B8 /* APIManager.swift */,
 			);
 			path = "Firebase-Chat-Research";
 			sourceTree = "<group>";
@@ -361,10 +378,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				091F19531C9EF711004F00B8 /* APIManager.swift in Sources */,
 				093BA6A01C9C1D2A00A5FA10 /* ChatMessage.swift in Sources */,
 				0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */,
 				093BA69E1C9BF23000A5FA10 /* Chat.swift in Sources */,
+				091F19581C9EFA4D004F00B8 /* Response.swift in Sources */,
 				0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */,
+				091F19551C9EF728004F00B8 /* User.swift in Sources */,
 				0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */,
 				093BA69C1C9BE9F500A5FA10 /* LoginViewController.swift in Sources */,
 				093BA69A1C9BE71D00A5FA10 /* Constants.swift in Sources */,
