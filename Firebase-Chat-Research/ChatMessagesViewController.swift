@@ -30,6 +30,34 @@ class ChatMessagesViewController: UIViewController {
         ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
         channelRef = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")"))
         
+        
+        
+        
+        
+//        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
+//            print(snapshot.value["totalCount"] )
+//            print(snapshot.value["unreadCount"])
+//        })
+        
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        ref?.removeAllObservers()
+        channelRef?.removeAllObservers()
+    }
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        registerMsgAddedObserver()
+        registerMsgRemovedObserver()
+    }
+    
+    func registerMsgAddedObserver() {
         ref?.queryOrderedByChild("timestamp").queryLimitedToLast(50).observeEventType(.ChildAdded, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
@@ -39,22 +67,23 @@ class ChatMessagesViewController: UIViewController {
             let to = snapshot.value[ChatMessage.FireBasePropertyKey.to] as? String ?? ""
             let message = snapshot.value[ChatMessage.FireBasePropertyKey.message] as? String ?? ""
             let timeStamp = snapshot.value[ChatMessage.FireBasePropertyKey.timeStamp] as? NSDate ?? NSDate()
-            let read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? false
+            let read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? true
             let chatMessage = ChatMessage(id: id, from: from, to: to, message: message, timeStamp: timeStamp, read: read)
             weakSelf.chatMessages.append(chatMessage)
             weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
             weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
-            if from != weakSelf.userName {
+            if (from != weakSelf.userName) && !read{
                 guard let messageRef = weakSelf.ref else {return}
                 weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
             }
             
             
-            
             }, withCancelBlock: { error in
                 print(error.description)
         })
-        
+    }
+    
+    func registerMsgRemovedObserver() {
         ref?.observeEventType(.ChildRemoved, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
@@ -65,18 +94,7 @@ class ChatMessagesViewController: UIViewController {
                 weakSelf.chatMessages.removeAtIndex(index!)
                 weakSelf.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: index!, inSection: 0)], withRowAnimation: .Automatic)
             }
-        })
-        
-        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            print(snapshot.value["totalCount"])
-            print(snapshot.value["unreadCount"])
-        })
-        
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+            })
     }
     
     func updateReadMsgCount(forRefrence reference: Firebase) {
@@ -88,14 +106,15 @@ class ChatMessagesViewController: UIViewController {
                 if error == nil && commited {
                     self.channelRef?.runTransactionBlock({
                         (currentData:FMutableData!) in
-                        let unreadCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_unreadCount")
-                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
-                        
-                        var totalCount = totalCountData.value as? Int
-                        if totalCount == nil {
-                            totalCount = 0
-                        }
-                        totalCountData.value = totalCount! - 1
+                        guard let userName = self.userName else {return FTransactionResult.successWithValue(currentData)}
+                        let unreadCountData = currentData.childDataByAppendingPath("\(userName)_unreadCount")
+//                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
+//                        
+//                        var totalCount = totalCountData.value as? Int
+//                        if totalCount == nil {
+//                            totalCount = 0
+//                        }
+//                        totalCountData.value = totalCount! - 1
                         
                         var unreadCount = unreadCountData.value as? Int
                         if unreadCount == nil {
@@ -137,11 +156,11 @@ class ChatMessagesViewController: UIViewController {
         if !(messageTextField.text ?? "").isEmpty {
             guard let messageRef = ref else {return}
             let to = (chat?.to ?? "") == userName ? (chat?.from ?? "") : (chat?.to ?? "")
-            let newMessage = [ChatMessage.FireBasePropertyKey.from : userName ?? "",
+            let newMessage: [String:AnyObject] = [ChatMessage.FireBasePropertyKey.from : userName ?? "",
                 ChatMessage.FireBasePropertyKey.to : to,
-                ChatMessage.FireBasePropertyKey.read : String(false),
+                ChatMessage.FireBasePropertyKey.read : false,
                 ChatMessage.FireBasePropertyKey.message : messageTextField.text!,
-                ChatMessage.FireBasePropertyKey.timeStamp : "\(Int(NSDate().timeIntervalSince1970 * 1000))"]
+                ChatMessage.FireBasePropertyKey.timeStamp : Int(NSDate().timeIntervalSince1970 * 1000)]
             print(newMessage)
             messageRef.childByAutoId().setValue(newMessage, withCompletionBlock: {
                 (error:NSError?, ref:Firebase!) in
