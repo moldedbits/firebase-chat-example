@@ -13,8 +13,17 @@ class AvailableUsersViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var availableUser = [User]()
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        // Initialize Tab Bar Item
+        tabBarItem = UITabBarItem(title: "Users", image: UIImage(named: "user"), tag: 0)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Users"
+        
         setUpTableView()
         apiManager.getUserLists { (successful, result, serverError, error) -> () in
             if successful {

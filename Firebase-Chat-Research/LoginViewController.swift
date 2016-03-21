@@ -47,7 +47,7 @@ class LoginViewController: UIViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == StoryBoardIdentifier.showChats && segue.destinationViewController.isKindOfClass(ChatHomeViewController) {
-            let chatHomeViewController = segue.destinationViewController as! ChatHomeViewController
+//            let chatHomeViewController = segue.destinationViewController as! ChatHomeViewController
             //chatsViewController.userName = userNameTextField.text!
         }
     }

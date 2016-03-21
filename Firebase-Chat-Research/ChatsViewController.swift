@@ -14,10 +14,17 @@ class ChatsViewController: UITableViewController {
     var userName: String = ""
     var chats = [Chat]()
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        // Initialize Tab Bar Item
+        tabBarItem = UITabBarItem(title: "Chats", image: UIImage(named: "chat"), tag: 1)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Chats"
+        
         userName = apiManager.currentUser
         let ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/users/\(userName)/activeChats"))
         
