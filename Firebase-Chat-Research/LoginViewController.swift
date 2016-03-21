@@ -11,9 +11,13 @@ import UIKit
 class LoginViewController: UIViewController {
 
     @IBOutlet weak var userNameTextField: UITextField!
+    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        spinner.center = self.view.center
+        spinner.color = UIColor.blueColor()
+        self.view.addSubview(spinner)
         // Do any additional setup after loading the view.
     }
 
@@ -26,6 +30,7 @@ class LoginViewController: UIViewController {
         if userNameTextField.text?.isEmpty ?? true {
             return
         }
+        spinner.startAnimating()
         apiManager.verifyUser(userNameTextField.text!) { (successful, result, serverError, error) -> () in
             if successful {
                 guard let userName = result else {return}
@@ -37,6 +42,7 @@ class LoginViewController: UIViewController {
                 alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(alert, animated: true, completion: nil)
             }
+            self.spinner.stopAnimating()
         }
         
         
