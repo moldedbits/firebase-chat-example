@@ -31,7 +31,7 @@ class ChatMessagesViewController: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         self.tableView.addGestureRecognizer(tap)
-        ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
+        ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages/"))
         channelRef = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")"))
     }
     
@@ -50,11 +50,14 @@ class ChatMessagesViewController: UIViewController {
         super.viewWillAppear(animated)
         print("Observer added")
         registerMsgAddedObserver()
-        registerMsgRemovedObserver()
-        //registerMsgChangedObserver()
+//        registerMsgRemovedObserver()
+        registerMsgChangedObserver()
     }
     
     func registerMsgAddedObserver() {
+        ref?.observeSingleEventOfType(.ChildAdded, withBlock: { (snapshot) -> Void in
+            print("Single event\(snapshot.value)")
+        })
         ref?.observeEventType(.ChildAdded, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
@@ -63,17 +66,20 @@ class ChatMessagesViewController: UIViewController {
             let from = snapshot.value.objectForKey(ChatMessage.FireBasePropertyKey.from) as? String ?? ""
             let to = snapshot.value[ChatMessage.FireBasePropertyKey.to] as? String ?? ""
             let message = snapshot.value[ChatMessage.FireBasePropertyKey.message] as? String ?? ""
-            print(snapshot.value.objectForKey(ChatMessage.FireBasePropertyKey.timeStamp) as? Double)
             let timeStamp = snapshot.value[ChatMessage.FireBasePropertyKey.timeStamp] as? Double ?? 0.0
             let read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? false
             if timeStamp != 0.0 {
                 let chatMessage = ChatMessage(id: id, from: from, to: to, message: message, timeStamp: NSDate(timeIntervalSince1970: timeStamp * 0.001), read: read)
                 weakSelf.chatMessages.append(chatMessage)
-                weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
-                weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Top)
+                let delay = 0.1 * Double(NSEC_PER_SEC)
+                let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                dispatch_after(time, dispatch_get_main_queue(), {
+//                    weakSelf.tableView.selectRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), animated: true, scrollPosition: .Bottom)
+                    weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .None, animated: false)
+                    })
                 if (from != weakSelf.userName) && !read{
-                    guard let messageRef = weakSelf.ref else {return}
-                    weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
+                   weakSelf.updateReadMsgCount(forMessageId: id)
                 }
             }
             }, withCancelBlock: { error in
@@ -85,7 +91,7 @@ class ChatMessagesViewController: UIViewController {
         ref?.observeEventType(.ChildRemoved, withBlock: { [weak self]
             snapshot in
             guard let weakSelf = self else {return}
-            print(snapshot.value)
+            print("Child Removed \(snapshot.value)")
             let id = snapshot.key
             let index = weakSelf.chatMessages.indexOf {$0.id == id}
             if index != nil && index! >= 0 && index! < weakSelf.chatMessages.count {
@@ -95,7 +101,7 @@ class ChatMessagesViewController: UIViewController {
             })
     }
     
-    func registerMsgChangedObserver(forReference refrence: Firebase) {
+    func registerMsgChangedObserver() {
         ref?.observeEventType(.ChildChanged, withBlock: {
             [weak self]
             snapshot in
@@ -104,28 +110,32 @@ class ChatMessagesViewController: UIViewController {
             if let index = weakSelf.chatMessages.indexOf({$0.id == snapshot.key}) {
                 let chatMessage = weakSelf.chatMessages[index]
                 chatMessage.read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? false
-                weakSelf.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+                if chatMessage.from == apiManager.currentUser {
+                    let cell = weakSelf.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: index, inSection: 0)) as! OutgoingMessageTableViewCell
+                    cell.seenImageView.hidden = !chatMessage.read
+//                    weakSelf.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .None)
+                }
             }
             })
     }
     
     
-    func updateReadMsgCount(forRefrence reference: Firebase) {
-        reference.childByAppendingPath("read").runTransactionBlock({ (readData) -> FTransactionResult! in
+    func updateReadMsgCount(forMessageId messageId: String) {
+        guard let messageRef = ref else {return}
+        messageRef.childByAppendingPath(messageId).childByAppendingPath("read").runTransactionBlock({ (readData) -> FTransactionResult! in
             readData.value = true
             return FTransactionResult.successWithValue(readData)
             }) { (error, commited, snapshot) -> Void in
                 if error == nil && commited {
-                    self.channelRef?.runTransactionBlock({
-                        (currentData:FMutableData!) in
-                        guard let userName = self.userName else {return FTransactionResult.successWithValue(currentData)}
-                        let unreadCountData = currentData.childDataByAppendingPath("\(userName)_unreadCount")
+                    
+                    self.channelRef?.childByAppendingPath("\(apiManager.currentUser)_unreadCount").runTransactionBlock({
+                        (unreadCountData:FMutableData!) in
                         var unreadCount = unreadCountData.value as? Int
                         if unreadCount == nil {
                             unreadCount = 0
                         }
                         unreadCountData.value = unreadCount! - 1
-                        return FTransactionResult.successWithValue(currentData)
+                        return FTransactionResult.successWithValue(unreadCountData)
                     })
                 }
         }

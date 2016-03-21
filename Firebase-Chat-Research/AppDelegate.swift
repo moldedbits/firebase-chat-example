@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
 //        Firebase.defaultConfig().persistenceEnabled = true
+//        application.windows.first?.layer.speed = 0.1
         return true
     }
 
