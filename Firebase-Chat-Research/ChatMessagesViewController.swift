@@ -20,11 +20,15 @@ class ChatMessagesViewController: UIViewController {
     var chatMessages = [ChatMessage]()
     var ref: Firebase?
     var channelRef: Firebase?
+    let formatter = NSDateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = chat?.from != apiManager.currentUser ? chat?.from : chat?.to
         setUpTableView()
         observerKeyboard()
+        formatter.dateFormat = "hh:mm a dd-MM-YYYY"
+        
         let tap = UITapGestureRecognizer(target: self, action: Selector("handleTap:"))
         self.tableView.addGestureRecognizer(tap)
         ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
@@ -34,10 +38,10 @@ class ChatMessagesViewController: UIViewController {
         
         
         
-//        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
-//            print(snapshot.value["totalCount"] )
-//            print(snapshot.value["unreadCount"])
-//        })
+        //        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
+        //            print(snapshot.value["totalCount"] )
+        //            print(snapshot.value["unreadCount"])
+        //        })
         
     }
     
@@ -55,6 +59,7 @@ class ChatMessagesViewController: UIViewController {
         super.viewWillAppear(animated)
         registerMsgAddedObserver()
         registerMsgRemovedObserver()
+        registerMsgChangedObserver()
     }
     
     func registerMsgAddedObserver() {
@@ -66,17 +71,19 @@ class ChatMessagesViewController: UIViewController {
             let from = snapshot.value[ChatMessage.FireBasePropertyKey.from] as? String ?? ""
             let to = snapshot.value[ChatMessage.FireBasePropertyKey.to] as? String ?? ""
             let message = snapshot.value[ChatMessage.FireBasePropertyKey.message] as? String ?? ""
-            let timeStamp = snapshot.value[ChatMessage.FireBasePropertyKey.timeStamp] as? NSDate ?? NSDate()
-            let read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? true
-            let chatMessage = ChatMessage(id: id, from: from, to: to, message: message, timeStamp: timeStamp, read: read)
-            weakSelf.chatMessages.append(chatMessage)
-            weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
-            weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
-            if (from != weakSelf.userName) && !read{
-                guard let messageRef = weakSelf.ref else {return}
-                weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
+            let timeStamp = snapshot.value[ChatMessage.FireBasePropertyKey.timeStamp] as? Double ?? 0.0
+            let read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? false
+            if timeStamp != 0.0 {
+                let chatMessage = ChatMessage(id: id, from: from, to: to, message: message, timeStamp: NSDate(timeIntervalSince1970: timeStamp), read: read)
+                weakSelf.chatMessages.append(chatMessage)
+                weakSelf.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0)], withRowAnimation: .Automatic)
+                weakSelf.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: weakSelf.chatMessages.count-1, inSection: 0), atScrollPosition: .Bottom, animated: true)
+                if (from != weakSelf.userName) && !read{
+                    guard let messageRef = weakSelf.ref else {return}
+                    weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
+                }
+                
             }
-            
             
             }, withCancelBlock: { error in
                 print(error.description)
@@ -97,6 +104,21 @@ class ChatMessagesViewController: UIViewController {
             })
     }
     
+    func registerMsgChangedObserver() {
+        ref?.observeEventType(.ChildChanged, withBlock: {
+            [weak self]
+            snapshot in
+            guard let weakSelf = self else {return}
+            print("child changed \(snapshot.value)")
+            if let index = weakSelf.chatMessages.indexOf({$0.id == snapshot.key}) {
+                let chatMessage = weakSelf.chatMessages[index]
+                chatMessage.read = snapshot.value[ChatMessage.FireBasePropertyKey.read] as? Bool ?? false
+                weakSelf.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: index, inSection: 0)], withRowAnimation: .Automatic)
+            }
+        })
+    }
+    
+    
     func updateReadMsgCount(forRefrence reference: Firebase) {
         reference.runTransactionBlock({ (messageData) -> FTransactionResult! in
             let read = messageData.childDataByAppendingPath("read")
@@ -108,13 +130,13 @@ class ChatMessagesViewController: UIViewController {
                         (currentData:FMutableData!) in
                         guard let userName = self.userName else {return FTransactionResult.successWithValue(currentData)}
                         let unreadCountData = currentData.childDataByAppendingPath("\(userName)_unreadCount")
-//                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
-//                        
-//                        var totalCount = totalCountData.value as? Int
-//                        if totalCount == nil {
-//                            totalCount = 0
-//                        }
-//                        totalCountData.value = totalCount! - 1
+                        //                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
+                        //
+                        //                        var totalCount = totalCountData.value as? Int
+                        //                        if totalCount == nil {
+                        //                            totalCount = 0
+                        //                        }
+                        //                        totalCountData.value = totalCount! - 1
                         
                         var unreadCount = unreadCountData.value as? Int
                         if unreadCount == nil {
@@ -126,6 +148,7 @@ class ChatMessagesViewController: UIViewController {
                 }
         }
     }
+    
     
     func updateTotalAndUnreadCount() {
         self.channelRef?.runTransactionBlock({
@@ -233,11 +256,21 @@ extension ChatMessagesViewController: UITableViewDataSource, UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath)
+        
         let chatMessage = chatMessages[indexPath.row]
-        cell.textLabel?.text = chatMessage.from
-        cell.detailTextLabel?.text = chatMessage.message
-        return cell
+        if chatMessage.from == apiManager.currentUser {
+            let cell = tableView.dequeueReusableCellWithIdentifier(String(OutgoingMessageTableViewCell), forIndexPath: indexPath) as! OutgoingMessageTableViewCell
+            cell.messageLabel.text = chatMessage.message
+            cell.seenImageView.hidden = !chatMessage.read
+            cell.timeLabel.text = formatter.stringFromDate(chatMessage.timeStamp ?? NSDate())
+            return cell
+        }
+        else {
+            let cell = tableView.dequeueReusableCellWithIdentifier(String(IncomingMessageTableViewCell), forIndexPath: indexPath) as! IncomingMessageTableViewCell
+            cell.messageLabel.text = chatMessage.message
+            cell.timeLabel.text = formatter.stringFromDate(chatMessage.timeStamp ?? NSDate())
+            return cell
+        }
     }
 }
 
