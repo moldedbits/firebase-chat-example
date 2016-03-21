@@ -14,6 +14,7 @@ let apiManager = APIManager.sharedInstance
 class APIManager: NSObject {
     
     static let sharedInstance = APIManager()
+    var currentUser = ""
     
     struct URLPaths {
         static let userList = "/users/list_users"

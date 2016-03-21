@@ -13,11 +13,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var userNameTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        apiManager.getUserLists { (successful, result, serverError, error) -> () in
-            if successful {
-                print(result)
-            }
-        }
+        
         // Do any additional setup after loading the view.
     }
 
@@ -37,9 +33,10 @@ class LoginViewController: UIViewController {
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == StoryBoardIdentifier.showChats && segue.destinationViewController.isKindOfClass(ChatsViewController) {
-            let chatsViewController = segue.destinationViewController as! ChatsViewController
-            chatsViewController.userName = userNameTextField.text!
+        apiManager.currentUser = userNameTextField.text!
+        if segue.identifier == StoryBoardIdentifier.showChats && segue.destinationViewController.isKindOfClass(ChatHomeViewController) {
+            let chatHomeViewController = segue.destinationViewController as! ChatHomeViewController
+            //chatsViewController.userName = userNameTextField.text!
         }
     }
   

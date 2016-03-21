@@ -18,7 +18,7 @@ class ChatsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Chats"
-        
+        userName = apiManager.currentUser
         let ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/users/\(userName)/activeChats"))
         
         //        ref.observeEventType(.Value, withBlock: { [weak self]

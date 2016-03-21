@@ -10,6 +10,8 @@
 		091F19531C9EF711004F00B8 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19521C9EF711004F00B8 /* APIManager.swift */; };
 		091F19551C9EF728004F00B8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19541C9EF728004F00B8 /* User.swift */; };
 		091F19581C9EFA4D004F00B8 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19571C9EFA4D004F00B8 /* Response.swift */; };
+		091F195A1C9F0372004F00B8 /* AvailableUsersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F19591C9F0372004F00B8 /* AvailableUsersViewController.swift */; };
+		091F195C1C9FC6A1004F00B8 /* ChatHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091F195B1C9FC6A1004F00B8 /* ChatHomeViewController.swift */; };
 		0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D31C9BE3B100C96216 /* AppDelegate.swift */; };
 		0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */; };
 		0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0933D3D71C9BE3B100C96216 /* ChatMessagesViewController.swift */; };
@@ -46,6 +48,8 @@
 		091F19521C9EF711004F00B8 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		091F19541C9EF728004F00B8 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		091F19571C9EFA4D004F00B8 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		091F19591C9F0372004F00B8 /* AvailableUsersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvailableUsersViewController.swift; sourceTree = "<group>"; };
+		091F195B1C9FC6A1004F00B8 /* ChatHomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatHomeViewController.swift; sourceTree = "<group>"; };
 		0933D3D01C9BE3B100C96216 /* Firebase-Chat-Research.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Firebase-Chat-Research.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0933D3D31C9BE3B100C96216 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0933D3D51C9BE3B100C96216 /* ChatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsViewController.swift; sourceTree = "<group>"; };
@@ -142,6 +146,8 @@
 				0933D3E11C9BE3B100C96216 /* Info.plist */,
 				093BA6991C9BE71D00A5FA10 /* Constants.swift */,
 				091F19521C9EF711004F00B8 /* APIManager.swift */,
+				091F19591C9F0372004F00B8 /* AvailableUsersViewController.swift */,
+				091F195B1C9FC6A1004F00B8 /* ChatHomeViewController.swift */,
 			);
 			path = "Firebase-Chat-Research";
 			sourceTree = "<group>";
@@ -381,9 +387,11 @@
 				091F19531C9EF711004F00B8 /* APIManager.swift in Sources */,
 				093BA6A01C9C1D2A00A5FA10 /* ChatMessage.swift in Sources */,
 				0933D3D81C9BE3B100C96216 /* ChatMessagesViewController.swift in Sources */,
+				091F195A1C9F0372004F00B8 /* AvailableUsersViewController.swift in Sources */,
 				093BA69E1C9BF23000A5FA10 /* Chat.swift in Sources */,
 				091F19581C9EFA4D004F00B8 /* Response.swift in Sources */,
 				0933D3D61C9BE3B100C96216 /* ChatsViewController.swift in Sources */,
+				091F195C1C9FC6A1004F00B8 /* ChatHomeViewController.swift in Sources */,
 				091F19551C9EF728004F00B8 /* User.swift in Sources */,
 				0933D3D41C9BE3B100C96216 /* AppDelegate.swift in Sources */,
 				093BA69C1C9BE9F500A5FA10 /* LoginViewController.swift in Sources */,
