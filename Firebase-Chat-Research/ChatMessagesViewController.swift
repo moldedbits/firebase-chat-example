@@ -33,16 +33,6 @@ class ChatMessagesViewController: UIViewController {
         self.tableView.addGestureRecognizer(tap)
         ref = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")/messages"))
         channelRef = Firebase(url:Constants.FIREBASE_BASE_URL.stringByAppendingString("/chats/\(chat?.channelName ?? "")"))
-        
-        
-        
-        
-        
-        //        channelRef?.observeSingleEventOfType(.Value, withBlock: { snapshot in
-        //            print(snapshot.value["totalCount"] )
-        //            print(snapshot.value["unreadCount"])
-        //        })
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -82,9 +72,7 @@ class ChatMessagesViewController: UIViewController {
                     guard let messageRef = weakSelf.ref else {return}
                     weakSelf.updateReadMsgCount(forRefrence: messageRef.childByAppendingPath(id))
                 }
-                
             }
-            
             }, withCancelBlock: { error in
                 print(error.description)
         })
@@ -101,7 +89,7 @@ class ChatMessagesViewController: UIViewController {
                 weakSelf.chatMessages.removeAtIndex(index!)
                 weakSelf.tableView.deleteRowsAtIndexPaths([NSIndexPath(forRow: index!, inSection: 0)], withRowAnimation: .Automatic)
             }
-            })
+        })
     }
     
     func registerMsgChangedObserver() {
@@ -130,14 +118,6 @@ class ChatMessagesViewController: UIViewController {
                         (currentData:FMutableData!) in
                         guard let userName = self.userName else {return FTransactionResult.successWithValue(currentData)}
                         let unreadCountData = currentData.childDataByAppendingPath("\(userName)_unreadCount")
-                        //                        let totalCountData = currentData.childDataByAppendingPath("\(self.userName ?? "")_totalCount")
-                        //
-                        //                        var totalCount = totalCountData.value as? Int
-                        //                        if totalCount == nil {
-                        //                            totalCount = 0
-                        //                        }
-                        //                        totalCountData.value = totalCount! - 1
-                        
                         var unreadCount = unreadCountData.value as? Int
                         if unreadCount == nil {
                             unreadCount = 0
