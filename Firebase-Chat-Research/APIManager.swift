@@ -18,6 +18,7 @@ class APIManager: NSObject {
     
     struct URLPaths {
         static let userList = "/users/list_users"
+        static let verifyUser = "/users/sign_in"
     }
     
     func getAbsolutePath(forPath path: String) -> String {
@@ -66,5 +67,17 @@ class APIManager: NSObject {
 
     }
     
+    func verifyUser(userName: String, completionHandler:(successful:Bool, result:String?, serverError:AnyObject?, error:NSError?)->()) {
+        let params = ["name": userName]
+        makeRequest(URLPaths.verifyUser, params: params, completionHandler: { (successful, response, serverError, error) -> () in
+            if successful {
+                let userName = response["user_name"].string
+                completionHandler(successful:true, result:userName, serverError:serverError, error:error)
+            } else {
+                completionHandler(successful:false, result:nil, serverError:serverError, error:error)
+            }
+        })
+        
+    }
 
 }

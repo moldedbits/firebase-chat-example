@@ -26,14 +26,26 @@ class LoginViewController: UIViewController {
         if userNameTextField.text?.isEmpty ?? true {
             return
         }
-        performSegueWithIdentifier(StoryBoardIdentifier.showChats, sender: sender)
+        apiManager.verifyUser(userNameTextField.text!) { (successful, result, serverError, error) -> () in
+            if successful {
+                guard let userName = result else {return}
+                apiManager.currentUser = userName
+                self.performSegueWithIdentifier(StoryBoardIdentifier.showChats, sender: sender)
+            }
+            else {
+                let alert = UIAlertController(title: "Wrong username", message: "Please enter correct username.", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
+        
+        
     }
 
     
     // MARK: - Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        apiManager.currentUser = userNameTextField.text!
         if segue.identifier == StoryBoardIdentifier.showChats && segue.destinationViewController.isKindOfClass(ChatHomeViewController) {
             let chatHomeViewController = segue.destinationViewController as! ChatHomeViewController
             //chatsViewController.userName = userNameTextField.text!
