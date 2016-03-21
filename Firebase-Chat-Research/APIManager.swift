@@ -19,6 +19,7 @@ class APIManager: NSObject {
     struct URLPaths {
         static let userList = "/users/list_users"
         static let verifyUser = "/users/sign_in"
+        static let startChat = "/users/start_chat"
     }
     
     func getAbsolutePath(forPath path: String) -> String {
@@ -77,7 +78,18 @@ class APIManager: NSObject {
                 completionHandler(successful:false, result:nil, serverError:serverError, error:error)
             }
         })
-        
     }
+    
+    func startChat(withUserName userName: String, completionHandler:(successful:Bool, result:String?, serverError:AnyObject?, error:NSError?)->()) {
+        let params = ["to": userName, "from": currentUser]
+        makeRequest(URLPaths.startChat, action: .POST, params: params, completionHandler: { (successful, response, serverError, error) -> () in
+            if successful {
+                completionHandler(successful:true, result:userName, serverError:serverError, error:error)
+            } else {
+                completionHandler(successful:false, result:nil, serverError:serverError, error:error)
+            }
+        })
+    }
+
 
 }

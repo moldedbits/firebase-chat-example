@@ -79,4 +79,19 @@ extension AvailableUsersViewController: UITableViewDataSource, UITableViewDelega
         cell.textLabel?.text = user.userName
         return cell
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let user = availableUser[indexPath.row]
+        guard let userName = user.userName where userName != "" else {return}
+        apiManager.startChat(withUserName: userName) { (successful, result, serverError, error) -> () in
+            if successful {
+                self.tabBarController?.selectedIndex = 1
+            }
+            else {
+                let alert = UIAlertController(title: "Wrong username", message: "Please enter correct username.", preferredStyle: UIAlertControllerStyle.Alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
+    }
 }
